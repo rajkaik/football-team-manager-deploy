@@ -1,0 +1,49 @@
+# Configuration for the drone player-tracking pipeline.
+# All distances are in metres unless noted. Edit to match your footage.
+
+pitch:
+  # Standard full-size pitch. Measure your own pitch and override if different.
+  length: 105.0   # touchline to touchline (x axis)
+  width: 68.0     # goal line to goal line (y axis)
+
+video:
+  # If your container reports the wrong frame rate, override it here (else null
+  # → read from the file). Needed for speed/distance time scaling.
+  fps_override: null
+  # Process every Nth frame. 1 = every frame. 2-3 is plenty for movement stats
+  # and roughly halves/thirds the runtime.
+  frame_stride: 1
+
+detection:
+  model: yolo11x.pt        # players: largest COCO model; person class only
+  person_class_id: 0       # COCO 'person'
+  conf: 0.25
+  imgsz: 1280              # high res — overhead players are small
+  tiled: false             # set true to use SAHI tiling for very high drones
+
+tracker: bytetrack.yaml    # ultralytics tracker config (bytetrack / botsort)
+
+teams:
+  n_teams: 2               # outfield teams; keepers/ref handled separately
+  sample_frames: 50        # frames sampled to learn the jersey-colour clusters
+
+ball:
+  model: ball.pt           # fine-tuned ball model; falls back to person model's
+                           # 'sports ball' class (id 32) if this file is absent
+  sports_ball_class_id: 32
+  conf: 0.15               # ball is tiny — keep this low
+  max_gap_frames: 15       # interpolate across up to this many missed frames
+
+projection:
+  smoothing_window: 11     # Savitzky-Golay window (odd, in frames)
+  smoothing_polyorder: 2
+
+possession:
+  control_radius_m: 2.0    # a player "controls" the ball within this radius
+  min_control_frames: 3    # frames of control before crediting possession
+  pass_max_air_frames: 90  # max frames in flight to still count as one pass
+
+analytics:
+  # Sanity bounds used to flag implausible outputs (not hard errors).
+  max_speed_kmh: 36.0
+  max_match_distance_km: 14.0

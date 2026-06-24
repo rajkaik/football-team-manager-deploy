@@ -1,0 +1,18 @@
+# Core CV / tracking
+ultralytics>=8.3.0          # YOLO11 detection + built-in ByteTrack/BoT-SORT
+supervision>=0.25.0         # detection/annotation/tracking helpers (Roboflow)
+opencv-python>=4.9.0        # video IO, homography, drawing
+sahi>=0.11.0                # optional: tiled inference for small overhead players
+
+# Numerics / data
+numpy>=1.26.0
+pandas>=2.1.0
+scipy>=1.11.0               # Savitzky-Golay / Kalman smoothing
+scikit-learn>=1.3.0         # KMeans jersey-colour clustering
+
+# Plots / reporting
+matplotlib>=3.8.0
+seaborn>=0.13.0
+
+# Config
+pyyaml>=6.0
